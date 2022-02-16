@@ -1,0 +1,27 @@
+-- Data Engineeing Zoom Camp Homework Week 3 Big Query
+-- Question 1: What is the count of records in the model fact_trips after running all models with the test run variable disabled and filtering for 2019 and 2020 data only (pickup datetime) *
+SELECT count(1) FROM `dtc-de-2022-mg-339910.dbt_mgraham.fact_trips` 
+where pickup_datetime between '2019-01-01' and '2020-12-31';
+
+-- select count(1) from  dtc-de-2022-mg-339910.dbt_mgraham.stg_green_tripdata;
+-- select count(1) from  dtc-de-2022-mg-339910.dbt_mgraham.stg_yellow_tripdata;
+
+--Question 2: What is the distribution between service type filtering by years 2019 and 2020 data as done in the videos . (Yellow/Green) *
+select service_type, count(*) from dtc-de-2022-mg-339910.dbt_mgraham.fact_trips 
+group by service_type;
+
+-- Ran following for performance
+create or replace table dtc-de-2022-mg-339910.dbt_mgraham.fact_fhv_trips_partitioned
+partition by DATE(pickup_datetime)
+as select * from dtc-de-2022-mg-339910.dbt_mgraham.fact_fhv_trips;
+select count(*) from dtc-de-2022-mg-339910.dbt_mgraham.fact_fhv_trips_partitioned; 
+
+-- Question 3: What is the count of records in the model stg_fhv_tripdata after running all models with the test run variable disabled *
+SELECT count(1) FROM dtc-de-2022-mg-339910.trips_data_all.fhv_tripdata
+--where pickup_datetime between '2019-01-01' and '2019-12-31';
+
+
+-- Question 4: What is the count of records in the model fact_fhv_trips after running all dependencies with the test run variable disabled *
+SELECT count(1) FROM dtc-de-2022-mg-339910.dbt_mgraham.fact_fhv_trips;
+
+
